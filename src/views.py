@@ -1,4 +1,8 @@
 import datetime
+import os
+
+import requests
+from dotenv import load_dotenv
 
 
 def get_greeting() -> str:
@@ -52,3 +56,28 @@ def top_transactions(transactions):
         temp_dict["description"] = trans.get("Описание")
         top_trans.append(temp_dict)
     return top_trans
+
+
+def get_stock_price() -> list[dict]:
+    """
+    Функция подключается внешнему API - www.alphavantage.co и возвращает стоимость акций из S&P500:
+    "AAPL", "AMZN", "GOOGL", "MSFT","TSLA"
+    """
+    path_env = os.path.join(os.getcwd(), ".env")
+    load_dotenv(path_env)
+    api_key = os.getenv("API_KEY")
+    stock_names = ["AAPL", "AMZN", "GOOGL", "MSFT", "TSLA"]
+    stock_prices = []
+
+    for name in stock_names:
+        stock_dict = {}
+        url = f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={name}&apikey={api_key}'
+        r = requests.get(url)
+        data = r.json()
+        date = data['Meta Data']["3. Last Refreshed"]
+        name_stock = data['Meta Data']['2. Symbol']
+        price_stock = data["Time Series (Daily)"][date]["4. close"]
+        stock_dict["stock"] = name_stock
+        stock_dict["price"] = price_stock
+        stock_prices.append(stock_dict)
+    return stock_prices
