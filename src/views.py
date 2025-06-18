@@ -1,8 +1,12 @@
 import datetime
+import json
 import os
 
 import requests
 from dotenv import load_dotenv
+
+from src.utils import transactions_filter_by_date, read_xlsx_file
+
 
 
 def get_greeting() -> str:
@@ -27,14 +31,10 @@ def total_sum_cashback_card(transactions, date: str) -> list[dict]:
     Функция принимает DataFrame c транзакциями и выводит по каждой карте:
     последние 4 цифры карты, общая сумма расходов, кешбэк (1 рубль на каждые 100 рублей).
     """
-    # Приведение дат для фильтрования DataFrame transactions
-    date_end = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
-    date_start = date_end.replace(day=1)
-    date_end_filter = (date_end.date()).strftime("%Y-%m-%d")
-    date_start_filter = (date_start.date()).strftime("%Y-%m-%d")
     cards_info = []
+    date_filter = transactions_filter_by_date(date)
     # Фильтрование DataFrame transactions по диапазону дат и группировка по "номеру карты"
-    transactions_filtered = transactions[transactions["Дата платежа"].between(date_start_filter, date_end_filter)]
+    transactions_filtered = transactions[transactions["Дата платежа"].between(date_filter[0], date_filter[1])]
     cards_group = transactions_filtered.groupby("Номер карты")
     total_sum = abs(cards_group.apply(lambda x: x[x["Сумма операции"] < 0]
                     ["Сумма операции"].sum(), include_groups=False))
@@ -49,12 +49,15 @@ def total_sum_cashback_card(transactions, date: str) -> list[dict]:
     return cards_info
 
 
-def top_transactions(transactions):
+def top_transactions(transactions, date):
     """
     Функция принимает DataFrame c транзакциями и Топ-5 транзакций по сумме платежа.:
     """
     top_trans = []
-    sorted_trans_by_sum = transactions.sort_values(by="Сумма платежа", ascending=True)
+    date_filter = transactions_filter_by_date(date)
+    # Фильтрование DataFrame transactions по диапазону дат и группировка по "номеру карты"
+    transactions_filtered = transactions[transactions["Дата платежа"].between(date_filter[0], date_filter[1])]
+    sorted_trans_by_sum = transactions_filtered.sort_values(by="Сумма платежа", ascending=True)
     sorted_trans_temp = sorted_trans_by_sum.head(5).to_dict("records")
     for trans in sorted_trans_temp:
         temp_dict = {}
@@ -113,6 +116,25 @@ def get_exchange_rate():
             return "Ошибка подключения. Проверьте сетевое подключение."
         result = response.json()
         exchange_dict["currency"] = name
-        exchange_dict["rate"] = round(result.get("result"), 2)
+        exchange_dict["rate"] = result.get("result")
         exchange.append(exchange_dict)
     return exchange
+
+
+def get_views(date):
+    data_for_json = []
+    transactions = read_xlsx_file("../data/operations.xlsx")
+    dict_temp = {}
+    dict_temp["greeting"] = get_greeting()
+    dict_temp["cards"] = total_sum_cashback_card(transactions, date)
+    dict_temp["top_transactions"] = top_transactions(transactions, date)
+    dict_temp["currency_rates"] = get_exchange_rate()
+    dict_temp["stock_prices"] = get_stock_price()
+    data_for_json.append(dict_temp)
+    with open("../data/views.json", mode="w", encoding="utf-8") as file:
+        json.dump(data_for_json, file, indent=4, ensure_ascii=False)
+    return data_for_json
+
+
+
+print(get_views("2021-12-2 00:00:00"))
