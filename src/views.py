@@ -83,7 +83,7 @@ def get_stock_price() -> list[dict]:
     return stock_prices
 
 
-def get_exchange_rate() -> list[dict]:
+def get_exchange_rate():
     """
     Функция подключается внешнему API - www.apilayer.com и возвращает курсы валют.
     """
@@ -108,5 +108,3 @@ def get_exchange_rate() -> list[dict]:
         exchange_dict["rate"] = round(result.get("result"), 2)
         exchange.append(exchange_dict)
     return exchange
-
-

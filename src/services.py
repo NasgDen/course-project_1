@@ -14,10 +14,9 @@ def investment_bank(month: str, transactions: list[dict], limit: int) -> float:
                 datetime_object = datetime.strptime(str(transaction["Дата платежа"]), "%d.%m.%Y")
                 new_date_string = datetime_object.strftime("%Y-%m")
                 new_date = datetime.strptime(new_date_string, "%Y-%m")
-                if date == new_date and transaction["Сумма операции"] < 0 and (transaction["Сумма операции"]) % limit != 0:
-                    print(str(transaction["Дата платежа"]))
+                if (date == new_date and transaction["Сумма операции"] < 0
+                        and transaction["Сумма операции"] % limit != 0):
                     invest = (limit - (abs(transaction["Сумма операции"]) % limit))
-                    print((transaction["Сумма операции"]), invest)
                     invest_sum += invest
         return round(invest_sum, 2)
-
+    return 0
