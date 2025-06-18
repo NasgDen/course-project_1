@@ -7,3 +7,7 @@ def read_xlsx_file(path: str):
         return transactions
     except FileNotFoundError:
         return []
+
+
+def convert_dataframe_to_list(transactions_df) -> list[dict]:
+    return transactions_df.to_dict("records")

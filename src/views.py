@@ -81,3 +81,32 @@ def get_stock_price() -> list[dict]:
         stock_dict["price"] = price_stock
         stock_prices.append(stock_dict)
     return stock_prices
+
+
+def get_exchange_rate() -> list[dict]:
+    """
+    Функция подключается внешнему API - www.apilayer.com и возвращает курсы валют.
+    """
+    exchange = []
+    currency = ["USD", "EUR"]
+    path_env = os.path.join(os.getcwd(), ".env")
+    load_dotenv(path_env)
+    api_key = os.getenv("API_KEY_EXCHANGE")
+    payload = {}
+    headers = {
+        "apikey": f"{api_key}"
+    }
+    for name in currency:
+        exchange_dict = {}
+        url = f"https://api.apilayer.com/exchangerates_data/convert?to=RUB&from={name}&amount=1"
+        try:
+            response = requests.get(url, headers=headers, data=payload)
+        except requests.exceptions.ConnectionError:
+            return "Ошибка подключения. Проверьте сетевое подключение."
+        result = response.json()
+        exchange_dict["currency"] = name
+        exchange_dict["rate"] = round(result.get("result"), 2)
+        exchange.append(exchange_dict)
+    return exchange
+
+
