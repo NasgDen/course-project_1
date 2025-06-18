@@ -22,16 +22,24 @@ def get_greeting() -> str:
         return "Добрый вечер"
 
 
-def total_sum_cashback_card(transactions) -> list[dict]:
+def total_sum_cashback_card(transactions, date: str) -> list[dict]:
     """
     Функция принимает DataFrame c транзакциями и выводит по каждой карте:
     последние 4 цифры карты, общая сумма расходов, кешбэк (1 рубль на каждые 100 рублей).
     """
+    # Приведение дат для фильтрования DataFrame transactions
+    date_end = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+    date_start = date_end.replace(day=1)
+    date_end_filter = (date_end.date()).strftime("%Y-%m-%d")
+    date_start_filter = (date_start.date()).strftime("%Y-%m-%d")
     cards_info = []
-    cards_group = transactions.groupby("Номер карты")
+    # Фильтрование DataFrame transactions по диапазону дат и группировка по "номеру карты"
+    transactions_filtered = transactions[transactions["Дата платежа"].between(date_start_filter, date_end_filter)]
+    cards_group = transactions_filtered.groupby("Номер карты")
     total_sum = abs(cards_group.apply(lambda x: x[x["Сумма операции"] < 0]
                     ["Сумма операции"].sum(), include_groups=False))
     total_sum_dict = total_sum.to_dict()
+    # Формирование списка словарей для вывода
     for key, value in total_sum_dict.items():
         cards_temp = {}
         cards_temp["last_digits"] = key[1:]

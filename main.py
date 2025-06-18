@@ -10,14 +10,14 @@ PATH_TO_XLSX_FILE = os.path.join(os.getcwd(), "data", "operations.xlsx")
 
 def main():
     transactions_df = read_xlsx_file(PATH_TO_XLSX_FILE)
-    # print(total_sum_cashback_card(transactions_df))
+    print(total_sum_cashback_card(transactions_df, "2021-12-2 00:00:00"))
     # print(top_transactions(transactions_df))
     # print(get_stock_price())
     # print(get_exchange_rate())
     transactions = convert_dataframe_to_list(transactions_df)
-    date = input("Введите дату в формате ГГГГ-ММ: ")
-    limit = int(input("Введите лимит (10, 50 или 100): "))
-    print(investment_bank(date, transactions, limit))
+    # date = input("Введите дату в формате ГГГГ-ММ: ")
+    # limit = int(input("Введите лимит (10, 50 или 100): "))
+    # print(investment_bank(date, transactions, limit))
 
 
 if __name__ == "__main__":
