@@ -1,7 +1,7 @@
-import pandas as pd
 import datetime
-
 import os
+
+import pandas as pd
 import requests
 from dotenv import load_dotenv
 

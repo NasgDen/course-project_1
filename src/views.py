@@ -1,7 +1,7 @@
 import json
 
-from src.utils import (read_xlsx_file, get_greeting, total_sum_cashback_card, top_transactions, get_stock_price,
-                       get_exchange_rate)
+from src.utils import (get_exchange_rate, get_greeting, get_stock_price, read_xlsx_file, top_transactions,
+                       total_sum_cashback_card)
 
 
 def get_views(date):
