@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 def read_xlsx_file(path: str):
     try:
         transactions = pd.read_excel(path)
-        transactions["Дата платежа"] = pd.to_datetime(transactions["Дата платежа"], format="%d.%m.%Y")
+        # transactions["Дата платежа"] = pd.to_datetime(transactions["Дата платежа"], format="%d.%m.%Y")
         return transactions
     except FileNotFoundError:
         return []
@@ -54,6 +54,7 @@ def total_sum_cashback_card(transactions, date: str) -> list[dict]:
     """
     cards_info = []
     date_filter = transactions_filter_by_date(date)
+    transactions["Дата платежа"] = pd.to_datetime(transactions["Дата платежа"], format="%d.%m.%Y")
     # Фильтрование DataFrame transactions по диапазону дат и группировка по "номеру карты"
     transactions_filtered = transactions[transactions["Дата платежа"].between(date_filter[0], date_filter[1])]
     cards_group = transactions_filtered.groupby("Номер карты")
