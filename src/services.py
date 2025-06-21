@@ -49,6 +49,4 @@ def get_filter_by_name(transaction):
     """
     pattern = r"\b[А-Я]\w+\s[А-Я]\."
     find = list(filter(lambda d: (re.search(pattern, d["Описание"])) and d["Категория"] == "Переводы", transaction))
-    # with open("filter_by_name.json", mode="w", encoding="utf-8") as file:
-    #     json.dump(find, file, ensure_ascii=False, indent=4)
     return json.dumps(find, ensure_ascii=False, indent=4)

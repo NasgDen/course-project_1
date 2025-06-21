@@ -2,6 +2,7 @@ import os
 
 from src.services import investment_bank, get_search, get_search_by_tel, get_filter_by_name
 from src.utils import convert_dataframe_to_list, read_xlsx_file, transactions_filter_by_date
+from src.reports import spending_by_category
 
 # from src.views import get_exchange_rate, get_stock_price, top_transactions, total_sum_cashback_card
 
@@ -21,8 +22,9 @@ def main():
     # limit = int(input("Введите лимит (10, 50 или 100): "))
     # print(investment_bank(date, transactions, limit))
     # print(get_search(transactions, "Каршеринг"))
-    print(get_search_by_tel(transactions, "+79955555555"))
+    # print(get_search_by_tel(transactions, "+79955555555"))
     # print(get_filter_by_name(transactions))
+    print(spending_by_category(transactions_df, "Связь", "10.12.2021"))
 
 
 if __name__ == "__main__":
