@@ -1,5 +1,6 @@
 import datetime
 import os
+import json
 
 import pandas as pd
 import requests
@@ -98,20 +99,23 @@ def get_stock_price() -> list[dict]:
     path_env = os.path.join(os.getcwd(), ".env")
     load_dotenv(path_env)
     api_key = os.getenv("API_KEY")
-    stock_names = ["AAPL", "AMZN", "GOOGL", "MSFT", "TSLA"]
+    # json_file = os.path.join(os.getcwd(), ".env")
+    # print(json_file)
+    with open("../user_settings.json", mode="r", encoding="utf-8") as file:
+        stock_names = json.load(file)
     stock_prices = []
 
-    for name in stock_names:
-        stock_dict = {}
-        url = f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={name}&apikey={api_key}'
-        r = requests.get(url)
-        data = r.json()
-        date = data['Meta Data']["3. Last Refreshed"]
-        name_stock = data['Meta Data']['2. Symbol']
-        price_stock = data["Time Series (Daily)"][date]["4. close"]
-        stock_dict["stock"] = name_stock
-        stock_dict["price"] = price_stock
-        stock_prices.append(stock_dict)
+    # for name in stock_names["user_stocks"]:
+    #     stock_dict = {}
+    #     url = f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={name}&apikey={api_key}'
+    #     r = requests.get(url)
+    #     data = r.json()
+    #     date = data['Meta Data']["3. Last Refreshed"]
+    #     name_stock = data['Meta Data']['2. Symbol']
+    #     price_stock = data["Time Series (Daily)"][date]["4. close"]
+    #     stock_dict["stock"] = name_stock
+    #     stock_dict["price"] = price_stock
+    #     stock_prices.append(stock_dict)
     return stock_prices
 
 
@@ -120,7 +124,8 @@ def get_exchange_rate():
     Функция подключается внешнему API - www.apilayer.com и возвращает курсы валют.
     """
     exchange = []
-    currency = ["USD", "EUR"]
+    with open("../user_settings.json", mode="r", encoding="utf-8") as file:
+        currency = json.load(file)
     path_env = os.path.join(os.getcwd(), ".env")
     load_dotenv(path_env)
     api_key = os.getenv("API_KEY_EXCHANGE")
@@ -128,7 +133,7 @@ def get_exchange_rate():
     headers = {
         "apikey": f"{api_key}"
     }
-    for name in currency:
+    for name in currency["user_currencies"]:
         exchange_dict = {}
         url = f"https://api.apilayer.com/exchangerates_data/convert?to=RUB&from={name}&amount=1"
         try:

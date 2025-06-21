@@ -4,7 +4,7 @@ import pandas as pd
 import datetime
 from pandas.testing import assert_frame_equal
 
-from src.utils import read_xlsx_file, get_greeting, total_sum_cashback_card
+from src.utils import read_xlsx_file, get_greeting, total_sum_cashback_card, top_transactions, get_stock_price, get_exchange_rate
 
 
 # Тест функции read_excel_file - отсутствие файла
@@ -61,6 +61,34 @@ def test_total_sum_cashback_card():
     mock_total_sum_cashback_card = MagicMock(return_value=[{'col1': 1, 'col2': 4}, {'col1': 2, 'col2': 5}, {'col1': 3, 'col2': 6}])
     total_sum_cashback_card = mock_total_sum_cashback_card
     assert total_sum_cashback_card() == [{'col1': 1, 'col2': 4}, {'col1': 2, 'col2': 5}, {'col1': 3, 'col2': 6}]
+
+
+def test_total_sum_cashback_card_valid(transactions_df):
+    result = [{'cashback': 0.15, 'last_digits': '7197', 'total_spent': 15.0}]
+    assert total_sum_cashback_card(transactions_df, "2021-12-2 00:00:00") == result
+
+
+def test_top_transactions(top_transactions_df):
+    result = []
+    assert top_transactions(top_transactions_df, "2021-12-20 00:00:00") == result
+
+
+@patch('requests.get')
+def test_get_stock_price(mock_get):
+    mock_get.return_value.json.return_value = {'Meta Data': {'2. Symbol': 'AAPL', '3. Last Refreshed': '2025-06-20'}, 'Time Series (Daily)': {'2025-06-20': {'1. open': '198.2350', '2. high': '201.7000', '3. low': '196.8550', '4. close': '201.0000'}}}
+    assert get_stock_price() == [{'price': '201.0000', 'stock': 'AAPL'},
+                                 {'price': '201.0000', 'stock': 'AAPL'},
+                                 {'price': '201.0000', 'stock': 'AAPL'},
+                                 {'price': '201.0000', 'stock': 'AAPL'},
+                                 {'price': '201.0000', 'stock': 'AAPL'}]
+
+
+@patch('requests.get')
+def test_get_exchange_rate(mock_get):
+    mock_get.return_value.json.return_value = {"result": 1}
+    assert get_exchange_rate() == [{'currency': 'USD', 'rate': 1}, {'currency': 'EUR', 'rate': 1}]
+
+
 
 
 
