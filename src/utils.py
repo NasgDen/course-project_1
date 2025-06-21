@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 def read_xlsx_file(path: str):
     try:
         transactions = pd.read_excel(path)
-        # transactions["Дата платежа"] = pd.to_datetime(transactions["Дата платежа"], format="%d.%m.%Y")
         return transactions
     except FileNotFoundError:
         return []
