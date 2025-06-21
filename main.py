@@ -1,8 +1,8 @@
 import os
 
-from src.services import investment_bank, get_search, get_search_by_tel, get_filter_by_name
-from src.utils import convert_dataframe_to_list, read_xlsx_file, transactions_filter_by_date
 from src.reports import spending_by_category
+from src.services import get_filter_by_name, get_search, get_search_by_tel, investment_bank
+from src.utils import convert_dataframe_to_list, read_xlsx_file, transactions_filter_by_date
 
 # from src.views import get_exchange_rate, get_stock_price, top_transactions, total_sum_cashback_card
 

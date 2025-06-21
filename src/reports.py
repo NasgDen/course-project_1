@@ -1,6 +1,8 @@
 import datetime
-import pandas as pd
 from functools import wraps
+
+import pandas as pd
+
 
 def json_decorator_with_filename(filename):
     def decorator_func(function):
@@ -27,8 +29,9 @@ def json_decorator(function):
         return result
     return wrapper
 
+
 @json_decorator_with_filename("reports.json")
-def spending_by_category(transactions, cateroty: str, data: str=""):
+def spending_by_category(transactions, cateroty: str, data: str = ""):
     if data:
         date_start = datetime.datetime.strptime(data, "%d.%m.%Y")
         date_end = date_start - datetime.timedelta(days=90)
@@ -40,6 +43,3 @@ def spending_by_category(transactions, cateroty: str, data: str=""):
     return transactions[(transactions["Категория"] == cateroty) &
                         (pd.to_datetime(transactions["Дата платежа"], format="%d.%m.%Y") < date_start) &
                         (pd.to_datetime(transactions["Дата платежа"], format="%d.%m.%Y") > date_end)]
-
-
-
