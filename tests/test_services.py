@@ -50,12 +50,7 @@ def test_get_search(top_transactions_list):
     assert get_search(top_transactions_list, "Связь") == json.dumps(result, ensure_ascii=False, indent=4)
 
 
-# Тест функции get_get_search_by_tel пустой список
-def test_get_get_search_by_tel_zero(top_transactions_list):
-    assert get_search_by_tel(top_transactions_list, "79099999999") == '[]'
-
-
-# Тест функции get_get_search_by_tel пустой список
+# Тест функции get_get_search_by_tel
 def test_get_get_search_by_tel(top_transactions_list):
     result = [{
             "Дата операции": "02.12.2021 16:26:02",
@@ -74,7 +69,7 @@ def test_get_get_search_by_tel(top_transactions_list):
             "Округление на инвесткопилку": 0,
             "Сумма операции с округлением": 15.0
         }]
-    assert get_search_by_tel(top_transactions_list, "79955555555") == json.dumps(result, ensure_ascii=False, indent=4)
+    assert get_search_by_tel(top_transactions_list) == json.dumps(result, ensure_ascii=False, indent=4)
 
 
 def test_get_filter_by_name(top_transactions_list):

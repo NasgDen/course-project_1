@@ -24,7 +24,8 @@ def main():
     # # print(investment_bank(date, transactions, limit))
     # print(get_search(transactions, "Связь"))
     # # print(get_filter_by_name(transactions))
-    print(spending_by_category(transactions_df, "Связь", "10.12.2021"))
+    print(get_search_by_tel(transactions))
+    # print(spending_by_category(transactions_df, "Связь", "10.12.2021"))
 
 
 if __name__ == "__main__":
