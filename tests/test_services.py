@@ -1,9 +1,16 @@
-from src.services import investment_bank
+import json
+
+from src.services import investment_bank, get_search, get_search_by_tel, get_filter_by_name
 
 
 # Тест функции investment_bank
 def test_investment_bank(top_transactions_list):
-    assert investment_bank("2021-12", top_transactions_list, 10) == 14.2
+    assert investment_bank("2021-12", top_transactions_list, 10) == 18.4
+
+
+# Тест функции investment_bank неправильны лимит
+def test_investment_bank_limit(top_transactions_list):
+    assert investment_bank("2021-12", top_transactions_list, 15) == 0
 
 
 # Тест функции investment_bank пустой список
@@ -16,3 +23,76 @@ def test_investment_bank_not_date(top_transactions_list):
     assert investment_bank("", top_transactions_list, 10) == 0
 
 
+# Тест функции get_search пустой список
+def test_get_search_zero(top_transactions_list):
+    assert get_search([], "Каршеринг") == '[]'
+
+
+# Тест функции get_search
+def test_get_search(top_transactions_list):
+    result = [{
+            "Дата операции": "16.01.2018 20:06:27",
+            "Дата платежа": "17.01.2018",
+            "Номер карты": "*7197",
+            "Статус": "OK",
+            "Сумма операции": -250.0,
+            "Валюта операции": "RUB",
+            "Сумма платежа": -250.0,
+            "Валюта платежа": "RUB",
+            "Кэшбэк": 0,
+            "Категория": "Связь",
+            "MCC": 4814.0,
+            "Описание": "МТС",
+            "Бонусы (включая кэшбэк)": 5,
+            "Округление на инвесткопилку": 0,
+            "Сумма операции с округлением": 250.0
+        }]
+    assert get_search(top_transactions_list, "Связь") == json.dumps(result, ensure_ascii=False, indent=4)
+
+
+# Тест функции get_get_search_by_tel пустой список
+def test_get_get_search_by_tel_zero(top_transactions_list):
+    assert get_search_by_tel(top_transactions_list, "79099999999") == '[]'
+
+
+# Тест функции get_get_search_by_tel пустой список
+def test_get_get_search_by_tel(top_transactions_list):
+    result = [{
+            "Дата операции": "02.12.2021 16:26:02",
+            "Дата платежа": "02.12.2021",
+            "Номер карты": "*7197",
+            "Статус": "OK",
+            "Сумма операции": -5510.8,
+            "Валюта операции": "RUB",
+            "Сумма платежа": -5510.8,
+            "Валюта платежа": "RUB",
+            "Кэшбэк": 0,
+            "Категория": "Каршеринг",
+            "MCC": 7379.0,
+            "Описание": "Тинькофф Мобайл +7 995 555-55-55",
+            "Бонусы (включая кэшбэк)": 0,
+            "Округление на инвесткопилку": 0,
+            "Сумма операции с округлением": 15.0
+        }]
+    assert get_search_by_tel(top_transactions_list, "79955555555") == json.dumps(result, ensure_ascii=False, indent=4)
+
+
+def test_get_filter_by_name(top_transactions_list):
+    result = [{
+            "Дата операции": "02.12.2021 16:26:02",
+            "Дата платежа": "02.12.2021",
+            "Номер карты": "*7197",
+            "Статус": "OK",
+            "Сумма операции": -5510.8,
+            "Валюта операции": "RUB",
+            "Сумма платежа": -5510.8,
+            "Валюта платежа": "RUB",
+            "Кэшбэк": 0,
+            "Категория": "Переводы",
+            "MCC": 7379.0,
+            "Описание": "Азер Г.",
+            "Бонусы (включая кэшбэк)": 0,
+            "Округление на инвесткопилку": 0,
+            "Сумма операции с округлением": 15.0
+        }]
+    assert get_filter_by_name(top_transactions_list) == json.dumps(result, ensure_ascii=False, indent=4)
