@@ -1,6 +1,6 @@
 import datetime
-import os
 import json
+import os
 
 import pandas as pd
 import requests
@@ -99,23 +99,24 @@ def get_stock_price() -> list[dict]:
     path_env = os.path.join(os.getcwd(), ".env")
     load_dotenv(path_env)
     api_key = os.getenv("API_KEY")
-    # json_file = os.path.join(os.getcwd(), ".env")
-    # print(json_file)
-    with open("../user_settings.json", mode="r", encoding="utf-8") as file:
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(os.path.dirname(current_dir))
+    file_path = os.path.join(project_root, "course_project_1/user_settings.json")
+    with open(file_path, mode="r", encoding="utf-8") as file:
         stock_names = json.load(file)
     stock_prices = []
 
-    # for name in stock_names["user_stocks"]:
-    #     stock_dict = {}
-    #     url = f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={name}&apikey={api_key}'
-    #     r = requests.get(url)
-    #     data = r.json()
-    #     date = data['Meta Data']["3. Last Refreshed"]
-    #     name_stock = data['Meta Data']['2. Symbol']
-    #     price_stock = data["Time Series (Daily)"][date]["4. close"]
-    #     stock_dict["stock"] = name_stock
-    #     stock_dict["price"] = price_stock
-    #     stock_prices.append(stock_dict)
+    for name in stock_names["user_stocks"]:
+        stock_dict = {}
+        url = f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={name}&apikey={api_key}'
+        r = requests.get(url)
+        data = r.json()
+        date = data['Meta Data']["3. Last Refreshed"]
+        name_stock = data['Meta Data']['2. Symbol']
+        price_stock = data["Time Series (Daily)"][date]["4. close"]
+        stock_dict["stock"] = name_stock
+        stock_dict["price"] = price_stock
+        stock_prices.append(stock_dict)
     return stock_prices
 
 
@@ -124,7 +125,10 @@ def get_exchange_rate():
     Функция подключается внешнему API - www.apilayer.com и возвращает курсы валют.
     """
     exchange = []
-    with open("../user_settings.json", mode="r", encoding="utf-8") as file:
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(os.path.dirname(current_dir))
+    file_path = os.path.join(project_root, "course_project_1/user_settings.json")
+    with open(file_path, mode="r", encoding="utf-8") as file:
         currency = json.load(file)
     path_env = os.path.join(os.getcwd(), ".env")
     load_dotenv(path_env)

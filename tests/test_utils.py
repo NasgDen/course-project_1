@@ -1,10 +1,10 @@
-from unittest.mock import patch, Mock, MagicMock
+import datetime
+from unittest.mock import MagicMock, patch
 
 import pandas as pd
-import datetime
-from pandas.testing import assert_frame_equal
 
-from src.utils import read_xlsx_file, get_greeting, total_sum_cashback_card, top_transactions, get_stock_price, get_exchange_rate
+from src.utils import (get_exchange_rate, get_greeting, get_stock_price, read_xlsx_file, top_transactions,
+                       total_sum_cashback_card)
 
 
 # Тест функции read_excel_file - отсутствие файла
@@ -24,7 +24,7 @@ def test_process_excel_data(mock_read_excel):
 
 # Тест функции get_greeting
 def test_get_greeting_day():
-    mock_time = datetime.datetime(2025,6, 21, 13, 0, 0)
+    mock_time = datetime.datetime(2025, 6, 21, 13, 0, 0)
     with patch("datetime.datetime") as mock_datetime:
         mock_datetime.now.return_value = mock_time
         result = get_greeting()
@@ -32,7 +32,7 @@ def test_get_greeting_day():
 
 
 def test_get_greeting_evening():
-    mock_time = datetime.datetime(2025,6, 21, 20, 0, 0)
+    mock_time = datetime.datetime(2025, 6, 21, 20, 0, 0)
     with patch("datetime.datetime") as mock_datetime:
         mock_datetime.now.return_value = mock_time
         result = get_greeting()
@@ -47,7 +47,6 @@ def test_get_greeting_night():
         assert result == "Доброй ночи"
 
 
-
 def test_get_greeting_morning():
     mock_time = datetime.datetime(2025, 6, 21, 10, 0, 0)
     with patch("datetime.datetime") as mock_datetime:
@@ -58,9 +57,13 @@ def test_get_greeting_morning():
 
 # total_sum_cashback_card
 def test_total_sum_cashback_card():
-    mock_total_sum_cashback_card = MagicMock(return_value=[{'col1': 1, 'col2': 4}, {'col1': 2, 'col2': 5}, {'col1': 3, 'col2': 6}])
+    mock_total_sum_cashback_card = MagicMock(return_value=[{'col1': 1, 'col2': 4},
+                                                           {'col1': 2, 'col2': 5},
+                                                           {'col1': 3, 'col2': 6}])
     total_sum_cashback_card = mock_total_sum_cashback_card
-    assert total_sum_cashback_card() == [{'col1': 1, 'col2': 4}, {'col1': 2, 'col2': 5}, {'col1': 3, 'col2': 6}]
+    assert total_sum_cashback_card() == [{'col1': 1, 'col2': 4},
+                                         {'col1': 2, 'col2': 5},
+                                         {'col1': 3, 'col2': 6}]
 
 
 def test_total_sum_cashback_card_valid(transactions_df):
@@ -75,7 +78,15 @@ def test_top_transactions(top_transactions_df):
 
 @patch('requests.get')
 def test_get_stock_price(mock_get):
-    mock_get.return_value.json.return_value = {'Meta Data': {'2. Symbol': 'AAPL', '3. Last Refreshed': '2025-06-20'}, 'Time Series (Daily)': {'2025-06-20': {'1. open': '198.2350', '2. high': '201.7000', '3. low': '196.8550', '4. close': '201.0000'}}}
+    mock_get.return_value.json.return_value = {'Meta Data':
+                                                   {'2. Symbol': 'AAPL',
+                                                    '3. Last Refreshed': '2025-06-20'},
+                                               'Time Series (Daily)':
+                                                   {'2025-06-20':
+                                                        {'1. open': '198.2350',
+                                                         '2. high': '201.7000',
+                                                         '3. low': '196.8550',
+                                                         '4. close': '201.0000'}}}
     assert get_stock_price() == [{'price': '201.0000', 'stock': 'AAPL'},
                                  {'price': '201.0000', 'stock': 'AAPL'},
                                  {'price': '201.0000', 'stock': 'AAPL'},
@@ -87,10 +98,3 @@ def test_get_stock_price(mock_get):
 def test_get_exchange_rate(mock_get):
     mock_get.return_value.json.return_value = {"result": 1}
     assert get_exchange_rate() == [{'currency': 'USD', 'rate': 1}, {'currency': 'EUR', 'rate': 1}]
-
-
-
-
-
-
-
