@@ -22,10 +22,9 @@ def main():
     # # date = input("Введите дату в формате ГГГГ-ММ: ")
     # # limit = int(input("Введите лимит (10, 50 или 100): "))
     # # print(investment_bank(date, transactions, limit))
-    print(get_search(transactions, "Связь"))
-    # # print(get_search_by_tel(transactions, "+79955555555"))
+    # print(get_search(transactions, "Связь"))
     # # print(get_filter_by_name(transactions))
-    # # print(spending_by_category(transactions_df, "Связь", "10.12.2021"))
+    print(spending_by_category(transactions_df, "Связь", "10.12.2021"))
 
 
 if __name__ == "__main__":
