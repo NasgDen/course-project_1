@@ -1,13 +1,12 @@
 from src.reports import spending_by_category, json_decorator_with_filename, json_decorator
 from os import path, remove
-from time import ctime
 import pandas as pd
+from pandas.testing import assert_frame_equal
 
-import pytest
 
-
-# def test_spending_by_category(transactions_df):
-#     spending_by_category(transactions_df, "", "") == pd.DataFrame()
+def test_spending_by_category(transactions_df):
+    df_func = spending_by_category(transactions_df, "Связь", "10.12.2021")
+    assert_frame_equal(df_func, transactions_df)
 
 
 # Тест декоратора json_decorator_with_filename с записью в файл
