@@ -1,6 +1,6 @@
 import json
 
-from src.services import investment_bank, get_search, get_search_by_tel, get_filter_by_name
+from src.services import get_filter_by_name, get_search, get_search_by_tel, investment_bank
 
 
 # Тест функции investment_bank

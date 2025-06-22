@@ -1,9 +1,8 @@
 import json
-import re
-import os
 import logging
+import os
+import re
 from datetime import datetime
-
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(os.path.dirname(current_dir))

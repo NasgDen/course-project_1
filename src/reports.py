@@ -5,7 +5,6 @@ from functools import wraps
 
 import pandas as pd
 
-
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(os.path.dirname(current_dir))
 PATH_TO_LOG_FILE = os.path.join(project_root, "course_project_1/logs/reports.log")
@@ -22,10 +21,8 @@ def json_decorator_with_filename(filename):
     def decorator_func(function):
         @wraps(function)
         def wrapper(*args, **kwargs):
-            print(function.__name__)
             result = function(*args, **kwargs)
             with open(filename, mode="w", encoding="utf-8") as file:
-                print(file)
                 result.to_json(file, orient='records', indent=4, force_ascii=False)
             return result
         return wrapper
@@ -39,7 +36,6 @@ def json_decorator(function):
         print(function.__name__)
         result = function(*args, **kwargs)
         with open(f"{function.__name__}.json", mode="w", encoding="utf-8") as file:
-            print(file)
             result.to_json(file, orient='records', indent=4, force_ascii=False)
         return result
     return wrapper

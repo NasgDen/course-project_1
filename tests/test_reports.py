@@ -1,7 +1,9 @@
-from src.reports import spending_by_category, json_decorator_with_filename, json_decorator
 from os import path, remove
+
 import pandas as pd
 from pandas.testing import assert_frame_equal
+
+from src.reports import json_decorator, json_decorator_with_filename, spending_by_category
 
 
 def test_spending_by_category(transactions_df):
@@ -33,7 +35,7 @@ def devide(a, b):
 
 # Тест декоратора json_decorator с записью в файл
 def test_decorators_out(capsys):
-    devide(10,5)
+    devide(10, 5)
     captured = capsys.readouterr()
-    assert captured.out == "devide\n<_io.TextIOWrapper name='devide.json' mode='w' encoding='utf-8'>\n"
+    assert captured.out == "devide\n"
     remove("devide.json")

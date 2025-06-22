@@ -3,14 +3,8 @@ from unittest.mock import MagicMock, patch
 
 import pandas as pd
 
-from src.utils import (
-    get_exchange_rate,
-    get_greeting,
-    get_stock_price,
-    read_xlsx_file,
-    top_transactions,
-    total_sum_cashback_card,
-)
+from src.utils import (get_exchange_rate, get_greeting, get_stock_price, read_xlsx_file, top_transactions,
+                       total_sum_cashback_card)
 
 
 # Тест функции read_excel_file - отсутствие файла

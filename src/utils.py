@@ -1,7 +1,7 @@
 import datetime
 import json
-import os
 import logging
+import os
 
 import pandas as pd
 import requests
@@ -88,8 +88,9 @@ def total_sum_cashback_card(transactions, date: str) -> list[dict]:
     # Фильтрование DataFrame transactions по диапазону дат и группировка по "номеру карты"
     transactions_filtered = transactions[transactions["Дата платежа"].between(date_filter[0], date_filter[1])]
     cards_group = transactions_filtered.groupby("Номер карты")
-    total_sum = abs(cards_group.apply(lambda x: x[x["Сумма операции"] < 0]
-                    ["Сумма операции"].sum(), include_groups=False))
+    total_sum = abs(
+        cards_group.apply(lambda x: x[x["Сумма операции"] < 0]["Сумма операции"].sum(), include_groups=False)
+    )
     total_sum_dict = total_sum.to_dict()
     # Формирование списка словарей для вывода
     for key, value in total_sum_dict.items():
@@ -126,7 +127,7 @@ def top_transactions(transactions, date):
     return top_trans
 
 
-def get_stock_price() -> list[dict]|str:
+def get_stock_price() -> list[dict] | str:
     """
     Функция подключается внешнему API - www.alphavantage.co и возвращает стоимость акций из S&P500:
     "AAPL", "AMZN", "GOOGL", "MSFT","TSLA"
@@ -144,7 +145,7 @@ def get_stock_price() -> list[dict]|str:
 
     for name in stock_names["user_stocks"]:
         stock_dict = {}
-        url = f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={name}&apikey={api_key}'
+        url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={name}&apikey={api_key}"
         try:
             req_url = requests.get(url)
             utils_log.info(f"Функция {get_stock_price.__name__}: Успешное подключение к API - alphavantage.co")
@@ -152,8 +153,8 @@ def get_stock_price() -> list[dict]|str:
             utils_log.error(f"Функция {get_stock_price.__name__}: Ошибка подключения. Проверьте сетевое подключение.")
             return "Ошибка подключения. Проверьте сетевое подключение."
         data = req_url.json()
-        date = data['Meta Data']["3. Last Refreshed"]
-        name_stock = data['Meta Data']['2. Symbol']
+        date = data["Meta Data"]["3. Last Refreshed"]
+        name_stock = data["Meta Data"]["2. Symbol"]
         price_stock = data["Time Series (Daily)"][date]["4. close"]
         stock_dict["stock"] = name_stock
         stock_dict["price"] = price_stock
@@ -178,9 +179,7 @@ def get_exchange_rate():
     load_dotenv(path_env)
     api_key = os.getenv("API_KEY_EXCHANGE")
     payload = {}
-    headers = {
-        "apikey": f"{api_key}"
-    }
+    headers = {"apikey": f"{api_key}"}
     for name in currency["user_currencies"]:
         exchange_dict = {}
         url = f"https://api.apilayer.com/exchangerates_data/convert?to=RUB&from={name}&amount=1"
@@ -188,7 +187,7 @@ def get_exchange_rate():
             response = requests.get(url, headers=headers, data=payload)
             utils_log.info(f"Функция {get_exchange_rate.__name__}: Успешное подключение к API - api.apilayer.com")
         except requests.exceptions.ConnectionError:
-            utils_log.error(f"Функция {get_exchange_rate.__name__}: Ошибка подключения. Проверьте сетевое подключение.")
+            utils_log.error(f"Функция {get_exchange_rate.__name__}:Ошибка подключения. Проверьте сетевое подключение")
             return "Ошибка подключения. Проверьте сетевое подключение."
         result = response.json()
         exchange_dict["currency"] = name
