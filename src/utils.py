@@ -86,22 +86,32 @@ def total_sum_cashback_card(transactions, date: str) -> list[dict]:
     date_filter = transactions_filter_by_date(date)
     transactions["Дата платежа"] = pd.to_datetime(transactions["Дата платежа"], format="%d.%m.%Y")
     # Фильтрование DataFrame transactions по диапазону дат и группировка по "номеру карты"
-    transactions_filtered = transactions[transactions["Дата платежа"].between(date_filter[0], date_filter[1])]
-    cards_group = transactions_filtered.groupby("Номер карты")
-    total_sum = abs(
-        cards_group.apply(lambda x: x[x["Сумма операции"] < 0]["Сумма операции"].sum(), include_groups=False)
-    )
-    total_sum_dict = total_sum.to_dict()
-    # Формирование списка словарей для вывода
-    for key, value in total_sum_dict.items():
-        cards_temp = {}
-        cards_temp["last_digits"] = key[1:]
-        cards_temp["total_spent"] = round(value, 2)
-        cards_temp["cashback"] = round(cards_temp["total_spent"], 2) * 0.01
-        cards_info.append(cards_temp)
-    utils_log.info(f"Успешное выполнение функции {total_sum_cashback_card.__name__}")
-    utils_log.debug(f"Значение функции {total_sum_cashback_card.__name__} : {cards_info}")
-    return cards_info
+    try:
+        transactions_filtered = transactions[transactions["Дата платежа"].between(date_filter[0], date_filter[1])]
+        cards_group = transactions_filtered.groupby("Номер карты")
+        total_sum = abs(
+            cards_group.apply(lambda x: x[x["Сумма операции"] < 0]["Сумма операции"].sum(), include_groups=False)
+        )
+        total_sum_dict = total_sum.to_dict()
+        # Формирование списка словарей для вывода
+        for key, value in total_sum_dict.items():
+            cards_temp = {}
+            cards_temp["last_digits"] = key[1:]
+            cards_temp["total_spent"] = round(value, 2)
+            cards_temp["cashback"] = round(cards_temp["total_spent"], 2) * 0.01
+            cards_info.append(cards_temp)
+        utils_log.info(f"Успешное выполнение функции {total_sum_cashback_card.__name__}")
+        utils_log.debug(f"Значение функции {total_sum_cashback_card.__name__} : {cards_info}")
+        return cards_info
+    except Exception as err:
+        utils_log.info(f"Функция {total_sum_cashback_card.__name__} Введенной даты нет в транзакциях")
+        return []
+    # if transactions_filtered.index:
+    #     print("индекс")
+    # else:
+    #     print("Нет индекса")
+    # print(transactions_filtered.iloc[0])
+
 
 
 def top_transactions(transactions, date):
@@ -153,9 +163,9 @@ def get_stock_price() -> list[dict] | str:
             utils_log.error(f"Функция {get_stock_price.__name__}: Ошибка подключения. Проверьте сетевое подключение.")
             return "Ошибка подключения. Проверьте сетевое подключение."
         data = req_url.json()
-        date = data["Meta Data"]["3. Last Refreshed"]
-        name_stock = data["Meta Data"]["2. Symbol"]
-        price_stock = data["Time Series (Daily)"][date]["4. close"]
+        date = (data.get("Meta Data", {})).get("3. Last Refreshed")
+        name_stock = (data.get("Meta Data", {})).get("2. Symbol")
+        price_stock = ((data.get("Time Series (Daily)", {})).get(date, {})).get("4. close", {})
         stock_dict["stock"] = name_stock
         stock_dict["price"] = price_stock
         stock_prices.append(stock_dict)
