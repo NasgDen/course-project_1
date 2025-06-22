@@ -30,7 +30,7 @@ def json_decorator(function):
     return wrapper
 
 
-# @json_decorator_with_filename("reports.json")
+@json_decorator_with_filename("reports.json")
 def spending_by_category(transactions, category: str, data: str = ""):
     if data:
         date_start = datetime.datetime.strptime(data, "%d.%m.%Y")
