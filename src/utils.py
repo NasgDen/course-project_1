@@ -103,20 +103,14 @@ def total_sum_cashback_card(transactions, date: str) -> list[dict]:
         utils_log.info(f"Успешное выполнение функции {total_sum_cashback_card.__name__}")
         utils_log.debug(f"Значение функции {total_sum_cashback_card.__name__} : {cards_info}")
         return cards_info
-    except Exception as err:
+    except Exception:
         utils_log.info(f"Функция {total_sum_cashback_card.__name__} Введенной даты нет в транзакциях")
         return []
-    # if transactions_filtered.index:
-    #     print("индекс")
-    # else:
-    #     print("Нет индекса")
-    # print(transactions_filtered.iloc[0])
-
 
 
 def top_transactions(transactions, date):
     """
-    Функция принимает DataFrame c транзакциями и Топ-5 транзакций по сумме платежа.:
+    Функция принимает DataFrame c транзакциями и дату и возвращает Топ-5 транзакций по сумме платежа.
     """
     utils_log.info(f"Вызов функции {top_transactions.__name__}")
     top_trans = []
