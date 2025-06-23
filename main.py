@@ -13,21 +13,31 @@ def main():
     Главная функция
     """
     # Работа функции get_view из модуля view.py
+    print("Привет! Добро пожаловать в программу работы с банковскими транзакциями.")
+    print("Данные для анализа и вывода на веб-страницах.")
+    print("Данные с начала месяца, на который выпадает входящая дата, по входящую дату. ")
     date_views = input("Введите дату в формате ГГГГ-ММ-ДД ЧЧ:ММ:СС: ")
     print(get_views(date_views))
 
     # Работа функций из модуля service.py
+    print("Инвесткапилка - позволяет копить через округление ваших трат")
     date_service = input("Введите дату в формате ГГГГ-ММ: ")
     limit = int(input("Введите лимит (10, 50 или 100): "))
     transactions_df = read_xlsx_file(PATH_TO_XLSX_FILE)
     transactions_list = convert_dataframe_to_list(transactions_df)
+    print("Cумму, которую удалось бы отложить в «Инвесткопилку»: ")
     print(investment_bank(date_service, transactions_list, limit))
+    print("Простой поиск в описании или категории транзакций.")
     search_input = input("Введите запрос для поиска в описании или категории: ")
     print(get_search(transactions_list, search_input))
+    print("Поиск переводов физическим лицам: ")
     print(get_filter_by_name(transactions_list))
+    print("Поиск по телефонным номерам: ")
     print(get_search_by_tel(transactions_list))
 
     # Работа функций из модуля reports.py
+    print("Отчеты по транзакциям")
+    print("Траты по категории")
     date_reports = input("Введите дату в формате ДД.ММ.ГГГГ для поиска: ")
     category = input("Введите название категории для поиска: ")
     print(spending_by_category(transactions_df, category, date_reports))
